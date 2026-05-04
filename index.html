@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>IT Support Ticket</title>
+  <style>
+    :root{--bg:#f5f7fb;--card:#fff;--text:#0f172a;--muted:#64748b;--primary:#2563eb;--danger:#dc2626;--ok:#16a34a;--border:#dbe3ef;--warn:#d97706}
+    @media(prefers-color-scheme:dark){:root{--bg:#0b1220;--card:#141c2f;--text:#e5ecff;--muted:#9eb0d6;--border:#2a3856}}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:15px}
+    .wrap{max-width:760px;margin:0 auto;padding:16px}
+    h2{font-size:20px;font-weight:800;margin-bottom:14px}
+    .tabs{display:flex;gap:8px;margin-bottom:14px}
+    .tab{border:1px solid var(--border);background:var(--card);color:var(--text);padding:9px 18px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;-webkit-appearance:none}
+    .tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .full{grid-column:1/-1}
+    label{font-size:12px;font-weight:600;margin-bottom:4px;display:block;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+    input,select,textarea{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:10px;background:transparent;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border-color .15s;-webkit-appearance:none;appearance:none}
+    input:focus,select:focus,textarea:focus{border-color:var(--primary)}
+    input.err,select.err{border-color:var(--danger)!important}
+    textarea{min-height:90px;resize:vertical}
+    .err-msg{color:var(--danger);font-size:11px;min-height:14px;margin-top:3px}
+    .pri-row{display:flex;gap:8px}
+    .pri-btn{flex:1;padding:9px 4px;border:1.5px solid var(--border);border-radius:8px;background:transparent;color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;-webkit-appearance:none}
+    .pri-btn[data-p="low"].on{border-color:#16a34a;background:#f0fdf4;color:#16a34a}
+    .pri-btn[data-p="med"].on{border-color:var(--warn);background:#fffbeb;color:var(--warn)}
+    .pri-btn[data-p="high"].on{border-color:var(--danger);background:#fef2f2;color:var(--danger)}
+    .img-area{border:2px dashed var(--border);border-radius:10px;padding:18px;text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:border-color .15s}
+    .img-area:hover{border-color:var(--primary)}
+    .img-area input{position:absolute;inset:0;opacity:0;cursor:pointer}
+    .img-area-label{font-size:13px;color:var(--muted);pointer-events:none}
+    .img-thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .img-thumb{width:70px;height:70px;border-radius:8px;overflow:hidden;border:1px solid var(--border);position:relative}
+    .img-thumb img{width:100%;height:100%;object-fit:cover}
+    .img-thumb .del{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;-webkit-appearance:none}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn:active:not(:disabled){opacity:.8}
+    .success-box{display:none;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:14px 16px;margin-bottom:12px;align-items:center;gap:14px}
+    .success-box.show{display:flex;animation:fd .2s ease}
+    @keyframes fd{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+    .s-ref{font-family:'Courier New',monospace;font-size:18px;font-weight:800;color:#16a34a;margin-left:auto}
+    .line-btn{display:flex;align-items:center;gap:12px;background:#06c755;border-radius:12px;padding:14px 16px;text-decoration:none;color:#fff;margin-bottom:14px}
+    .line-btn:active{opacity:.85}
+    .line-icon{width:36px;height:36px;background:rgba(0,0,0,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+    .line-text{flex:1}.line-title{font-size:14px;font-weight:700}.line-sub{font-size:12px;opacity:.85}
+    .search-bar{display:flex;gap:8px;margin-bottom:12px}
+    .search-bar input{flex:1}
+    .btn-search{width:auto;padding:10px 18px;background:var(--primary);color:#fff;border:none;border-radius:9px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;-webkit-appearance:none}
+    .filter-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 14px;margin-bottom:12px}
+    .filter-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:7px}
+    .chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:7px}
+    .chip-row:last-child{margin-bottom:0}
+    .chip{padding:4px 11px;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--muted);font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;-webkit-appearance:none;white-space:nowrap;transition:all .15s}
+    .chip.on{border-color:var(--primary);color:var(--primary);background:#eff6ff}
+    .chip-row-label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;align-self:center;white-space:nowrap}
+    .tkt-list{display:flex;flex-direction:column;gap:8px}
+    .tkt-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:13px 14px}
+    .tkt-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+    .tkt-id{font-family:'Courier New',monospace;font-size:11px;font-weight:700;color:var(--primary)}
+    .tkt-title{font-size:14px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .tkt-body{display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:12px;color:var(--muted);margin-bottom:8px}
+    .tkt-body span{display:flex;flex-direction:column;gap:1px}
+    .tkt-body .tl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+    .tkt-desc{font-size:13px;line-height:1.6;padding:9px;background:var(--bg);border-radius:8px;margin-bottom:8px;white-space:pre-wrap;color:var(--text)}
+    .tkt-imgs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:7px}
+    .tkt-imgs img{width:60px;height:60px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:pointer}
+    .tkt-note{font-size:12px;padding:8px;background:var(--bg);border-left:3px solid var(--primary);border-radius:0 7px 7px 0;color:var(--muted)}
+    .tkt-time{font-size:11px;color:var(--muted);text-align:right;margin-top:4px}
+    .badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid;white-space:nowrap}
+    .b-low{background:#f0fdf4;color:#16a34a;border-color:#bbf7d0}
+    .b-med{background:#fffbeb;color:#d97706;border-color:#fde68a}
+    .b-high{background:#fef2f2;color:#dc2626;border-color:#fecaca}
+    .b-open{background:#eff6ff;color:#2563eb;border-color:#bfdbfe}
+    .b-prog{background:#fffbeb;color:#d97706;border-color:#fde68a}
+    .b-done{background:#f0fdf4;color:#16a34a;border-color:#bbf7d0}
+    .b-closed{background:#f9fafb;color:#6b7280;border-color:#e5e7eb}
+    .b-esc{background:#fef2f2;color:#dc2626;border-color:#fecaca}
+    .empty{text-align:center;padding:40px;color:var(--muted)}
+    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;justify-content:center;align-items:flex-end}
+    .modal-bg.show{display:flex;animation:fi .15s ease}
+    @keyframes fi{from{opacity:0}to{opacity:1}}
+    .modal{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;padding:18px 16px 36px;animation:su .2s ease}
+    @keyframes su{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
+    @media(min-width:560px){.modal-bg{align-items:center;padding:20px}.modal{border-radius:14px}}
+    .mhandle{width:32px;height:3px;background:var(--border);border-radius:2px;margin:0 auto 14px}
+    .modal-title{font-size:16px;font-weight:800;margin-bottom:4px}
+    .modal-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+    .conf-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px}
+    .conf-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px}
+    .ci-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px}
+    .ci-v{font-size:12px;font-weight:600;word-break:break-word}
+    .conf-item.full{grid-column:1/-1}
+    .prev-imgs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+    .prev-imgs img{width:56px;height:56px;object-fit:cover;border-radius:6px;border:1px solid var(--border)}
+    .btn-outline{width:100%;padding:11px;background:transparent;border:1.5px solid var(--border);border-radius:10px;color:var(--muted);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;-webkit-appearance:none;margin-top:8px}
+    .lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;justify-content:center;align-items:center;padding:16px}
+    .lb.show{display:flex}
+    .lb img{max-width:100%;max-height:90vh;border-radius:10px;object-fit:contain}
+    .lb-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:18px;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;z-index:300;opacity:0;transition:all .25s;white-space:nowrap;pointer-events:none}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast.ok{border-color:#bbf7d0;color:#16a34a}
+    .toast.err{border-color:#fecaca;color:#dc2626}
+    .hidden{display:none!important}
+    @media(max-width:480px){.grid{grid-template-columns:1fr}.conf-grid{grid-template-columns:1fr}.tkt-body{grid-template-columns:1fr}.tabs .tab{padding:8px 12px;font-size:12px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h2>🖥️ IT Support</h2>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('submit',this)">📝 ส่ง Ticket</button>
+    <button class="tab"        onclick="switchTab('check',this)">🔍 เช็ค Ticket</button>
+  </div>
+
+  <!-- ส่ง Ticket -->
+  <div id="tab-submit">
+    <div class="success-box" id="sbox">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:#16a34a">✅ ส่ง Ticket สำเร็จ!</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">ทีม IT จะดำเนินการโดยเร็ว</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">📅 แจ้งเมื่อ: <span id="stime" style="font-weight:700;color:#16a34a"></span></div>
+      </div>
+      <div class="s-ref" id="sref">TKT-0000</div>
+    </div>
+    <div class="card">
+      <div class="grid">
+        <div class="fg-item"><label>ชื่อ-นามสกุล *</label><input id="f-name" placeholder="สมชาย ใจดี" autocomplete="name"><div class="err-msg" id="e-name"></div></div>
+        <div class="fg-item"><label>แผนก *</label>
+          <select id="f-dept">
+            <option value="">-- เลือกแผนก --</option>
+            <option>บัญชี / การเงิน</option><option>ขาย / Sale</option>
+            <option>HR / บุคคล</option><option>Operations</option>
+            <option>Management</option><option>Warehouse / โกดัง</option><option>อื่นๆ</option>
+          </select><div class="err-msg" id="e-dept"></div></div>
+        <div class="fg-item"><label>เบอร์ติดต่อ / Line *</label><input type="tel" id="f-contact" placeholder="081-234-5678 หรือ Line ID" autocomplete="tel"><div class="err-msg" id="e-contact"></div></div>
+        <div class="fg-item"><label>สถานที่</label><input id="f-loc" placeholder="เช่น ห้องบัญชี, ชั้น 2"></div>
+        <div class="fg-item"><label>หมวดหมู่ *</label>
+          <select id="f-cat">
+            <option value="">-- เลือกหมวดหมู่ --</option>
+            <option>💻 คอมพิวเตอร์ / โน้ตบุ๊ก</option>
+            <option>🌐 อินเทอร์เน็ต / เครือข่าย</option>
+            <option>🖨️ เครื่องพิมพ์</option>
+            <option>📧 Email / Office 365</option>
+            <option>💾 โปรแกรม / Software</option>
+            <option>📱 มือถือ / อุปกรณ์</option>
+            <option>🔑 Password / Account</option>
+            <option>📷 กล้องวงจรปิด / CCTV</option>
+            <option>📞 โทรศัพท์สำนักงาน</option>
+            <option>🛠️ อื่นๆ</option>
+          </select><div class="err-msg" id="e-cat"></div></div>
+        <div class="fg-item"><label>ความเร่งด่วน *</label>
+          <div class="pri-row">
+            <button class="pri-btn on" data-p="low"  onclick="setPri('low')">🟢<br>ปกติ</button>
+            <button class="pri-btn"    data-p="med"  onclick="setPri('med')">🟡<br>เร่งด่วน</button>
+            <button class="pri-btn"    data-p="high" onclick="setPri('high')">🔴<br>ด่วนมาก</button>
+          </div></div>
+        <div class="fg-item full"><label>หัวข้อปัญหา *</label><input id="f-subj" placeholder="เช่น Excel เปิดไม่ได้"><div class="err-msg" id="e-subj"></div></div>
+        <div class="fg-item full"><label>รายละเอียดเพิ่มเติม</label><textarea id="f-desc" placeholder="เกิดขึ้นตั้งแต่เมื่อไหร่ มี error อะไร..."></textarea></div>
+        <div class="fg-item full"><label>แนบรูปภาพ (สูงสุด 5 รูป, รูปละ ≤ 200KB)</label>
+          <div class="img-area" id="imgArea">
+            <input type="file" id="f-imgs" accept="image/*" multiple onchange="onImgChange(event)">
+            <div class="img-area-label">📎 กดหรือลากรูปมาวางที่นี่</div>
+          </div>
+          <div class="img-thumbs" id="imgThumbs"></div>
+          <div class="err-msg" id="e-imgs"></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="submitBtn" onclick="openConfirm()">📋 ตรวจสอบและส่ง Ticket</button>
+    </div>
+    <a class="line-btn" href="https://line.me/ti/g/5UeMzXjLAk" target="_blank" rel="noopener">
+      <div class="line-icon">💬</div>
+      <div class="line-text"><div class="line-title">ติดต่อเร่งด่วน / สอบถามเพิ่มเติม</div><div class="line-sub">กดเพื่อเข้า LINE Group IT Support</div></div>
+    </a>
+  </div>
+
+  <!-- เช็ค Ticket -->
+  <div id="tab-check" class="hidden">
+    <div class="search-bar">
+      <input type="search" id="sq" placeholder="ชื่อ, เบอร์, Ticket ID..." onkeydown="if(event.key==='Enter')doSearch()">
+      <button class="btn-search" onclick="doSearch()">ค้นหา</button>
+    </div>
+    <div class="filter-wrap">
+      <div class="filter-label">กรอง</div>
+      <div class="chip-row">
+        <span class="chip-row-label">สถานะ</span>
+        <button class="chip on" data-g="s" data-v="all"    onclick="setChip(this,'s')">ทั้งหมด</button>
+        <button class="chip"    data-g="s" data-v="open"   onclick="setChip(this,'s')">🔵 รอ</button>
+        <button class="chip"    data-g="s" data-v="prog"   onclick="setChip(this,'s')">🟡 กำลัง</button>
+        <button class="chip"    data-g="s" data-v="done"   onclick="setChip(this,'s')">✅ เสร็จ</button>
+        <button class="chip"    data-g="s" data-v="closed" onclick="setChip(this,'s')">🔒 ปิด</button>
+      </div>
+      <div class="chip-row">
+        <span class="chip-row-label">หมวดหมู่</span>
+        <button class="chip on" data-g="c" data-v="all" onclick="setChip(this,'c')">ทั้งหมด</button>
+        <button class="chip" data-g="c" data-v="💻 คอมพิวเตอร์ / โน้ตบุ๊ก"  onclick="setChip(this,'c')">💻 คอม</button>
+        <button class="chip" data-g="c" data-v="🌐 อินเทอร์เน็ต / เครือข่าย" onclick="setChip(this,'c')">🌐 เน็ต</button>
+        <button class="chip" data-g="c" data-v="🖨️ เครื่องพิมพ์"              onclick="setChip(this,'c')">🖨️ ปริ้นต์</button>
+        <button class="chip" data-g="c" data-v="📧 Email / Office 365"        onclick="setChip(this,'c')">📧 Email</button>
+        <button class="chip" data-g="c" data-v="💾 โปรแกรม / Software"        onclick="setChip(this,'c')">💾 Software</button>
+        <button class="chip" data-g="c" data-v="🔑 Password / Account"        onclick="setChip(this,'c')">🔑 Password</button>
+      </div>
+      <div class="chip-row">
+        <span class="chip-row-label">แผนก</span>
+        <button class="chip on" data-g="d" data-v="all"              onclick="setChip(this,'d')">ทั้งหมด</button>
+        <button class="chip"    data-g="d" data-v="บัญชี / การเงิน" onclick="setChip(this,'d')">บัญชี</button>
+        <button class="chip"    data-g="d" data-v="ขาย / Sale"       onclick="setChip(this,'d')">ขาย</button>
+        <button class="chip"    data-g="d" data-v="HR / บุคคล"       onclick="setChip(this,'d')">HR</button>
+        <button class="chip"    data-g="d" data-v="Operations"        onclick="setChip(this,'d')">Operations</button>
+        <button class="chip"    data-g="d" data-v="Management"        onclick="setChip(this,'d')">Management</button>
+      </div>
+    </div>
+    <div class="tkt-list" id="tktList"><div class="empty">🔍 ค้นหา Ticket ของคุณด้านบน</div></div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-bg" id="confBg" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <div class="modal-title">✅ ตรวจสอบข้อมูลก่อนส่ง</div>
+    <div class="modal-sub">กรุณาตรวจสอบให้ถูกต้องก่อนยืนยัน</div>
+    <div class="conf-grid">
+      <div class="conf-item"><div class="ci-l">ชื่อ-นามสกุล</div><div class="ci-v" id="c-name"></div></div>
+      <div class="conf-item"><div class="ci-l">แผนก</div><div class="ci-v" id="c-dept"></div></div>
+      <div class="conf-item"><div class="ci-l">เบอร์ติดต่อ</div><div class="ci-v" id="c-contact"></div></div>
+      <div class="conf-item"><div class="ci-l">สถานที่</div><div class="ci-v" id="c-loc"></div></div>
+      <div class="conf-item"><div class="ci-l">หมวดหมู่</div><div class="ci-v" id="c-cat"></div></div>
+      <div class="conf-item"><div class="ci-l">ความเร่งด่วน</div><div class="ci-v" id="c-pri"></div></div>
+      <div class="conf-item full"><div class="ci-l">หัวข้อปัญหา</div><div class="ci-v" id="c-subj"></div></div>
+      <div class="conf-item full" id="c-desc-wrap" style="display:none"><div class="ci-l">รายละเอียด</div><div class="ci-v" id="c-desc" style="white-space:pre-wrap"></div></div>
+    </div>
+    <div class="prev-imgs" id="c-imgs"></div>
+    <button class="btn btn-primary" id="confBtn" onclick="doSubmit()">📨 ยืนยันส่ง Ticket</button>
+    <button class="btn-outline" onclick="closeConf()">← แก้ไขข้อมูล</button>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb" onclick="closeLb()">
+  <button class="lb-close">✕</button>
+  <img id="lb-img" src="" alt="">
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyEb-fjZbRtY_1NSFJ9eyWACncaYGRT67IdKhDQ_8YqcGKOBwjef5qT0ev4KF3RP7Ar/exec';
+const MAX_SIZE = 200*1024;
+const sMap={open:'🔵 รอดำเนินการ',prog:'🟡 กำลังดำเนินการ',done:'✅ แก้ไขแล้ว',closed:'🔒 ปิด',esc:'🔼 Escalated'};
+const sCls={open:'b-open',prog:'b-prog',done:'b-done',closed:'b-closed',esc:'b-esc'};
+const pMap={low:'🟢 ปกติ',med:'🟡 เร่งด่วน',high:'🔴 ด่วนมาก'};
+const pCls={low:'b-low',med:'b-med',high:'b-high'};
+const htmlEsc=v=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const debounce=(fn,w=300)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),w)}};
+
+let pri='low',imgFiles=[],fetched=[],aF={s:'all',c:'all',d:'all'};
+
+function switchTab(id,el){
+  document.querySelectorAll('[id^=tab-]').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.remove('hidden');
+  el.classList.add('active');
+  if(id==='check'){fetched=[];renderList([])}
+}
+function setPri(p){pri=p;document.querySelectorAll('.pri-btn').forEach(b=>b.classList.remove('on'));document.querySelector('.pri-btn[data-p="'+p+'"]').classList.add('on')}
+function onImgChange(e){addImgs(e.target.files)}
+function addImgs(files){
+  document.getElementById('e-imgs').textContent='';
+  for(const f of files){
+    if(imgFiles.length>=5){document.getElementById('e-imgs').textContent='แนบรูปได้สูงสุด 5 รูป';break}
+    if(f.size>MAX_SIZE){document.getElementById('e-imgs').textContent='รูป "'+f.name+'" เกิน 200KB';continue}
+    if(!f.type.startsWith('image/')){continue}
+    imgFiles.push(f);
+  }
+  renderThumbs();
+}
+function renderThumbs(){
+  document.getElementById('imgThumbs').innerHTML=imgFiles.map((f,i)=>{
+    const u=URL.createObjectURL(f);
+    return'<div class="img-thumb"><img src="'+u+'"><button class="del" onclick="delImg('+i+')">✕</button></div>';
+  }).join('');
+}
+function delImg(i){imgFiles.splice(i,1);renderThumbs()}
+function validate(){
+  let ok=true;
+  [['f-name','e-name',v=>v.trim()],['f-dept','e-dept',v=>v],['f-contact','e-contact',v=>v.trim()],['f-cat','e-cat',v=>v],['f-subj','e-subj',v=>v.trim()]].forEach(([fid,eid,t])=>{
+    const el=document.getElementById(fid),em=document.getElementById(eid);
+    if(!t(el.value)){el.classList.add('err');em.textContent='กรุณากรอกข้อมูลนี้';ok=false}
+    else{el.classList.remove('err');em.textContent=''}
+  });
+  return ok;
+}
+function openConfirm(){
+  if(!validate()){window.scrollTo({top:0,behavior:'smooth'});return}
+  document.getElementById('c-name').textContent   =document.getElementById('f-name').value.trim();
+  document.getElementById('c-dept').textContent   =document.getElementById('f-dept').value;
+  document.getElementById('c-contact').textContent=document.getElementById('f-contact').value.trim();
+  document.getElementById('c-loc').textContent    =document.getElementById('f-loc').value.trim()||'—';
+  document.getElementById('c-cat').textContent    =document.getElementById('f-cat').value;
+  document.getElementById('c-pri').innerHTML      ='<span class="badge '+pCls[pri]+'">'+pMap[pri]+'</span>';
+  document.getElementById('c-subj').textContent   =document.getElementById('f-subj').value.trim();
+  const d=document.getElementById('f-desc').value.trim();
+  const dw=document.getElementById('c-desc-wrap');
+  if(d){document.getElementById('c-desc').textContent=d;dw.style.display='block'}else dw.style.display='none';
+  document.getElementById('c-imgs').innerHTML=imgFiles.map(f=>'<img src="'+URL.createObjectURL(f)+'">').join('');
+  document.getElementById('confBg').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeConf(){document.getElementById('confBg').classList.remove('show');document.body.style.overflow=''}
+function bgClose(e){if(e.target===document.getElementById('confBg'))closeConf()}
+async function toB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
+async function doSubmit(){
+  const btn=document.getElementById('confBtn');
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>กำลังส่ง...';
+  try{
+    const images=await Promise.all(imgFiles.map(toB64));
+    const payload={
+      full_name:   htmlEsc(document.getElementById('f-name').value.trim()),
+      department:  document.getElementById('f-dept').value,
+      contact:     htmlEsc(document.getElementById('f-contact').value.trim()),
+      location:    htmlEsc(document.getElementById('f-loc').value.trim()),
+      category:    document.getElementById('f-cat').value,
+      priority:    pri,
+      subject:     htmlEsc(document.getElementById('f-subj').value.trim()),
+      description: htmlEsc(document.getElementById('f-desc').value.trim()),
+      images
+    };
+    const url=API+'?action=create&data='+encodeURIComponent(JSON.stringify(payload));
+    const res=await fetch(url);
+    const j=await res.json();
+    if(!j.success)throw new Error(j.message||'เกิดข้อผิดพลาด');
+    document.getElementById('sref').textContent=j.data.ticket_id;
+    document.getElementById('stime').textContent=new Date(j.data.created_at).toLocaleString('th-TH',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})+' น.';
+    document.getElementById('sbox').classList.add('show');
+    setTimeout(()=>document.getElementById('sbox').classList.remove('show'),8000);
+    ['f-name','f-contact','f-loc','f-subj','f-desc'].forEach(x=>document.getElementById(x).value='');
+    document.getElementById('f-dept').value='';document.getElementById('f-cat').value='';
+    imgFiles=[];renderThumbs();setPri('low');
+    closeConf();window.scrollTo({top:0,behavior:'smooth'});
+    showToast('✅ '+j.message,'ok');
+  }catch(e){showToast('❌ '+e.message,'err');}
+  finally{btn.disabled=false;btn.innerHTML='📨 ยืนยันส่ง Ticket';}
+}
+function setChip(el,g){document.querySelectorAll('.chip[data-g="'+g+'"]').forEach(b=>b.classList.remove('on'));el.classList.add('on');aF[g]=el.dataset.v;renderList(fetched)}
+async function doSearch(){
+  const q=document.getElementById('sq').value.trim();
+  document.getElementById('tktList').innerHTML='<div class="empty">⏳ กำลังค้นหา...</div>';
+  try{
+    const url=API+'?action=list&q='+encodeURIComponent(q);
+    const res=await fetch(url);
+    const j=await res.json();
+    if(!j.success)throw new Error(j.message);
+    fetched=Array.isArray(j.data)?j.data:[];
+    renderList(fetched);
+  }catch(e){document.getElementById('tktList').innerHTML='<div class="empty">⚠️ '+htmlEsc(e.message)+'</div>';}
+}
+function renderList(data){
+  const list=data.filter(t=>{
+    const st=t.status||'open',cat=t.category||'',dep=t.department||'';
+    if(aF.s!=='all'&&st!==aF.s)return false;
+    if(aF.c!=='all'&&!cat.includes(aF.c.replace(/💻|🌐|🖨️|📧|💾|🔑/g,'').trim()))return false;
+    if(aF.d!=='all'&&dep!==aF.d)return false;
+    return true;
+  });
+  const el=document.getElementById('tktList');
+  if(!list.length){el.innerHTML='<div class="empty">📭 ไม่พบ Ticket</div>';return}
+  el.innerHTML=list.map(t=>{
+    let imgs='';try{imgs=(t.images||[]).map(s=>'<img src="'+htmlEsc(s)+'" onclick="openLb(\''+htmlEsc(s)+'\')">').join('')}catch(e){}
+    const notes=Array.isArray(t.notes)?t.notes:[];
+    const ln=notes.length?'<div class="tkt-note">📝 IT: '+htmlEsc(notes[notes.length-1].text)+'</div>':'';
+    const st=t.status||'open',pri=t.priority||'low';
+    return'<div class="tkt-card">'
+      +'<div class="tkt-head"><span class="tkt-id">'+htmlEsc(t.ticket_id)+'</span><span class="tkt-title">'+htmlEsc(t.subject)+'</span><span class="badge '+sCls[st]+'">'+sMap[st]+'</span></div>'
+      +'<div class="tkt-body"><span><span class="tl">ผู้แจ้ง</span>'+htmlEsc(t.full_name)+'</span><span><span class="tl">แผนก</span>'+htmlEsc(t.department)+'</span>'
+      +'<span><span class="tl">ติดต่อ</span>'+htmlEsc(t.contact)+'</span><span><span class="tl">สถานที่</span>'+(t.location||'—')+'</span>'
+      +'<span><span class="tl">หมวดหมู่</span>'+htmlEsc(t.category)+'</span><span><span class="tl">ความเร่งด่วน</span><span class="badge '+pCls[pri]+'">'+pMap[pri]+'</span></span></div>'
+      +(t.description?'<div class="tkt-desc">'+htmlEsc(t.description)+'</div>':'')
+      +(imgs?'<div class="tkt-imgs">'+imgs+'</div>':'')
+      +ln
+      +'<div class="tkt-time">แจ้งเมื่อ '+htmlEsc(String(t.created_at||'—'))+'</div></div>';
+  }).join('');
+}
+function openLb(src){document.getElementById('lb-img').src=src;document.getElementById('lb').classList.add('show');document.body.style.overflow='hidden'}
+function closeLb(){document.getElementById('lb').classList.remove('show');document.body.style.overflow=''}
+function showToast(msg,type){const el=document.getElementById('toast');el.textContent=msg;el.className='toast '+type+' show';setTimeout(()=>el.className='toast',3500)}
+</script>
+</body>
+</html>
