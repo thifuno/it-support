@@ -20,7 +20,9 @@
     .full{grid-column:1/-1}
     label{font-size:12px;font-weight:600;margin-bottom:4px;display:block;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
     input,select,textarea{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:10px;background:var(--card);color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border-color .15s;-webkit-appearance:none;appearance:none}
-    select option{background:var(--card);color:var(--text)}
+    select option{background:#1e293b!important;color:#e2e8f0!important}
+    select{color:var(--text);background-color:var(--card)}
+    @media(prefers-color-scheme:light){select option{background:#ffffff!important;color:#0f172a!important}}
     input:focus,select:focus,textarea:focus{border-color:var(--primary)}
     input.err,select.err{border-color:var(--danger)!important}
     textarea{min-height:90px;resize:vertical}
@@ -142,7 +144,7 @@
             <option>HR / บุคคล</option><option>Operations</option>
             <option>Management</option><option>Warehouse / โกดัง</option><option>อื่นๆ</option>
           </select><div class="err-msg" id="e-dept"></div></div>
-        <div class="fg-item"><label>เบอร์ติดต่อ / Line *</label><input type="tel" id="f-contact" placeholder="081-234-5678 หรือ Line ID" autocomplete="tel"><div class="err-msg" id="e-contact"></div></div>
+        <div class="fg-item"><label>เบอร์ติดต่อ / Line *</label><input type="text" id="f-contact" inputmode="text" placeholder="081-234-5678 หรือ Line ID" autocomplete="tel"><div class="err-msg" id="e-contact"></div></div>
         <div class="fg-item"><label>สถานที่</label><input id="f-loc" placeholder="เช่น ห้องบัญชี, ชั้น 2"></div>
         <div class="fg-item"><label>หมวดหมู่ *</label>
           <select id="f-cat">
