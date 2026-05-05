@@ -19,7 +19,8 @@
     .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
     .full{grid-column:1/-1}
     label{font-size:12px;font-weight:600;margin-bottom:4px;display:block;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
-    input,select,textarea{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:10px;background:transparent;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border-color .15s;-webkit-appearance:none;appearance:none}
+    input,select,textarea{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:10px;background:var(--card);color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border-color .15s;-webkit-appearance:none;appearance:none}
+    select option{background:var(--card);color:var(--text)}
     input:focus,select:focus,textarea:focus{border-color:var(--primary)}
     input.err,select.err{border-color:var(--danger)!important}
     textarea{min-height:90px;resize:vertical}
@@ -165,7 +166,7 @@
           </div></div>
         <div class="fg-item full"><label>หัวข้อปัญหา *</label><input id="f-subj" placeholder="เช่น Excel เปิดไม่ได้"><div class="err-msg" id="e-subj"></div></div>
         <div class="fg-item full"><label>รายละเอียดเพิ่มเติม</label><textarea id="f-desc" placeholder="เกิดขึ้นตั้งแต่เมื่อไหร่ มี error อะไร..."></textarea></div>
-        <div class="fg-item full"><label>แนบรูปภาพ (สูงสุด 5 รูป, รูปละ ≤ 200KB)</label>
+        <div class="fg-item full"><label>แนบรูปภาพ (สูงสุด 5 รูป, รูปละ ≤ 1MB)</label>
           <div class="img-area" id="imgArea">
             <input type="file" id="f-imgs" accept="image/*" multiple onchange="onImgChange(event)">
             <div class="img-area-label">📎 กดหรือลากรูปมาวางที่นี่</div>
@@ -255,7 +256,7 @@
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyEb-fjZbRtY_1NSFJ9eyWACncaYGRT67IdKhDQ_8YqcGKOBwjef5qT0ev4KF3RP7Ar/exec';
-const MAX_SIZE = 200*1024;
+const MAX_SIZE = 1024*1024;
 const sMap={open:'🔵 รอดำเนินการ',prog:'🟡 กำลังดำเนินการ',done:'✅ แก้ไขแล้ว',closed:'🔒 ปิด',esc:'🔼 Escalated'};
 const sCls={open:'b-open',prog:'b-prog',done:'b-done',closed:'b-closed',esc:'b-esc'};
 const pMap={low:'🟢 ปกติ',med:'🟡 เร่งด่วน',high:'🔴 ด่วนมาก'};
@@ -278,7 +279,7 @@ function addImgs(files){
   document.getElementById('e-imgs').textContent='';
   for(const f of files){
     if(imgFiles.length>=5){document.getElementById('e-imgs').textContent='แนบรูปได้สูงสุด 5 รูป';break}
-    if(f.size>MAX_SIZE){document.getElementById('e-imgs').textContent='รูป "'+f.name+'" เกิน 200KB';continue}
+    if(f.size>MAX_SIZE){document.getElementById('e-imgs').textContent='รูป "'+f.name+'" เกิน 1MB';continue}
     if(!f.type.startsWith('image/')){continue}
     imgFiles.push(f);
   }
