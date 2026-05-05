@@ -1,177 +1,116 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IT Dashboard</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
-:root{
-  --bg:#0c0f18;--surface:#131720;--surface2:#1a1f2e;--surface3:#222840;
-  --border:#2a3050;--ink:#dde3f5;--ink2:#7b87aa;--muted:#404d6b;--accent:#e84e1b;
-  --blue:#4f7eff;--blue-bg:rgba(79,126,255,.12);--blue-bd:rgba(79,126,255,.4);
-  --green:#22c55e;--green-bg:rgba(34,197,94,.12);--green-bd:rgba(34,197,94,.4);
-  --yellow:#f59e0b;--yellow-bg:rgba(245,158,11,.12);--yellow-bd:rgba(245,158,11,.4);
-  --red:#ef4444;--red-bg:rgba(239,68,68,.12);--red-bd:rgba(239,68,68,.4);
-  --gray:#6b7280;--gray-bg:rgba(107,114,128,.1);--gray-bd:rgba(107,114,128,.3);
-  --r:10px;
-}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:14px}
-#pinScreen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-#pinScreen.hidden{display:none}
-.pin-logo{width:52px;height:52px;background:var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:18px}
-.pin-title{font-size:20px;font-weight:800;margin-bottom:4px}
-.pin-sub{font-size:12px;color:var(--ink2);margin-bottom:24px}
-.pin-dots{display:flex;gap:10px;margin-bottom:20px}
-.pin-dot{width:13px;height:13px;border-radius:50%;border:2px solid var(--border);transition:all .15s}
-.pin-dot.on{background:var(--blue);border-color:var(--blue)}
-.pin-dot.err{background:var(--red);border-color:var(--red)}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:240px;width:100%}
-.pk{padding:14px;border:1px solid var(--border);border-radius:9px;background:var(--surface);color:var(--ink);font-family:'Noto Sans Thai',sans-serif;font-size:17px;font-weight:700;cursor:pointer;text-align:center;-webkit-appearance:none;transition:all .15s}
-.pk:active{background:var(--surface2);transform:scale(.94)}
-.pk.sm{font-size:12px;color:var(--ink2)}
-.pin-err{font-size:12px;color:var(--red);margin-top:8px;min-height:16px}
-.pin-hint{font-size:11px;color:var(--muted);margin-top:12px}
-#app{display:none}#app.show{display:block}
-.topbar{background:var(--surface);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;padding:0 16px;gap:10px;position:sticky;top:0;z-index:50}
-.brand-icon{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.brand-name{font-weight:800;font-size:15px}
-.topbar-right{margin-left:auto;display:flex;gap:8px}
-.btn-sm{padding:5px 12px;border-radius:7px;font-family:'Noto Sans Thai',sans-serif;font-size:12px;font-weight:600;cursor:pointer;-webkit-appearance:none;border:1px solid var(--border);background:var(--surface2);color:var(--ink2)}
-.main{max-width:900px;margin:0 auto;padding:16px 14px 60px}
-.page-title{font-size:18px;font-weight:800;margin-bottom:2px}
-.page-sub{font-size:12px;color:var(--ink2);margin-bottom:16px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center}
-.stat-n{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;line-height:1}
-.stat-l{font-size:10px;color:var(--ink2);margin-top:3px;line-height:1.4}
-.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
-.fb{padding:4px 11px;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--ink2);font-family:'Noto Sans Thai',sans-serif;font-size:11px;font-weight:600;cursor:pointer;-webkit-appearance:none;white-space:nowrap;transition:all .15s}
-.fb.on{border-color:var(--blue);color:var(--blue);background:var(--blue-bg)}
-.search-in{margin-left:auto;padding:5px 11px;font-size:12px;width:150px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;color:var(--ink);font-family:'Noto Sans Thai',sans-serif;outline:none;-webkit-appearance:none}
-.search-in:focus{border-color:var(--blue)}
+:root{--bg:#0b1220;--card:#141c2f;--text:#e5ecff;--muted:#95a7cf;--border:#2b395a;--primary:#3b82f6;--ok:#16a34a;--warn:#f59e0b;--danger:#ef4444}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;font-size:14px}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+h2{font-size:18px;font-weight:800;margin-bottom:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+.stat-n{font-size:26px;font-weight:700;line-height:1}
+.stat-l{font-size:11px;color:var(--muted);margin-top:3px}
+.filters{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.filters select,.filters input{background:#11192c;border:1px solid var(--border);border-radius:9px;color:var(--text);padding:8px 10px;font-family:inherit;font-size:13px;outline:none}
+.filters input{flex:1;min-width:160px}
 .tkt-list{display:flex;flex-direction:column;gap:7px}
-.tkt-row{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 13px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .15s}
-.tkt-row:hover{border-color:var(--blue)}
-.tkt-id{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);flex-shrink:0;min-width:60px}
+.tkt-row{background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:12px 13px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .15s}
+.tkt-row:hover{border-color:var(--primary)}
+.tkt-id{font-family:monospace;font-size:11px;font-weight:700;color:#f97316;flex-shrink:0;min-width:66px}
 .tkt-info{flex:1;min-width:0}
-.tkt-info h4{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tkt-info p{font-size:11px;color:var(--ink2);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tkt-info h4{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.tkt-info p{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tkt-meta{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
 .tkt-time{font-size:10px;color:var(--muted)}
 .badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid;white-space:nowrap}
-.b-low{background:var(--green-bg);color:var(--green);border-color:var(--green-bd)}
-.b-med{background:var(--yellow-bg);color:var(--yellow);border-color:var(--yellow-bd)}
-.b-high{background:var(--red-bg);color:var(--red);border-color:var(--red-bd)}
-.b-open{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)}
-.b-prog{background:var(--yellow-bg);color:var(--yellow);border-color:var(--yellow-bd)}
-.b-done{background:var(--green-bg);color:var(--green);border-color:var(--green-bd)}
-.b-closed{background:var(--gray-bg);color:var(--gray);border-color:var(--gray-bd)}
-.b-esc{background:var(--red-bg);color:var(--red);border-color:var(--red-bd)}
-.empty{text-align:center;padding:40px;color:var(--ink2)}
-.empty-icon{font-size:32px;margin-bottom:8px}
-.loading{text-align:center;padding:40px;color:var(--ink2);display:flex;align-items:center;justify-content:center;gap:10px}
-.spin{width:18px;height:18px;border:2px solid rgba(79,126,255,.2);border-top-color:var(--blue);border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
+.b-low{background:rgba(22,163,74,.15);color:#4ade80;border-color:rgba(22,163,74,.4)}
+.b-med{background:rgba(245,158,11,.15);color:#fbbf24;border-color:rgba(245,158,11,.4)}
+.b-high{background:rgba(239,68,68,.15);color:#f87171;border-color:rgba(239,68,68,.4)}
+.b-open{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.4)}
+.b-prog{background:rgba(245,158,11,.15);color:#fbbf24;border-color:rgba(245,158,11,.4)}
+.b-done{background:rgba(22,163,74,.15);color:#4ade80;border-color:rgba(22,163,74,.4)}
+.b-closed{background:rgba(107,114,128,.15);color:#9ca3af;border-color:rgba(107,114,128,.4)}
+.b-esc{background:rgba(239,68,68,.15);color:#f87171;border-color:rgba(239,68,68,.4)}
+.empty{text-align:center;padding:48px;color:var(--muted)}
+.loading{text-align:center;padding:40px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:10px}
+.spin{width:18px;height:18px;border:2px solid rgba(59,130,246,.2);border-top-color:var(--primary);border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;justify-content:center;align-items:flex-end}
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;justify-content:center;align-items:flex-end}
 .modal-bg.show{display:flex;animation:fi .15s ease}
 @keyframes fi{from{opacity:0}to{opacity:1}}
-.modal{background:var(--surface);border-radius:16px 16px 0 0;width:100%;max-width:620px;max-height:92vh;overflow-y:auto;padding:18px 14px 36px;animation:su .2s ease;-webkit-overflow-scrolling:touch}
+.modal{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-width:640px;max-height:92vh;overflow-y:auto;padding:18px 14px 36px;animation:su .2s ease}
 @keyframes su{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
-@media(min-width:580px){.modal-bg{align-items:center;padding:20px}.modal{border-radius:14px}}
+@media(min-width:600px){.modal-bg{align-items:center;padding:20px}.modal{border-radius:14px}}
 .mhandle{width:32px;height:3px;background:var(--border);border-radius:2px;margin:0 auto 14px}
 .mhead{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
-.m-id{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);margin-bottom:2px}
+.m-id{font-family:monospace;font-size:12px;color:#f97316;margin-bottom:2px}
 .m-title{font-size:16px;font-weight:800}
-.close-btn{width:28px;height:28px;border-radius:7px;background:var(--surface2);border:1px solid var(--border);color:var(--ink2);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.close-btn{width:28px;height:28px;border-radius:7px;background:#1e293b;border:1px solid var(--border);color:var(--muted);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
-.ib{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 11px}
+.ib{background:#1e293b;border:1px solid var(--border);border-radius:8px;padding:9px 11px}
 .ib-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px}
 .ib-v{font-size:12px;font-weight:600}
-.desc-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px;font-size:13px;line-height:1.7;margin-bottom:12px;white-space:pre-wrap;color:var(--ink2)}
+.desc-box{background:#1e293b;border:1px solid var(--border);border-radius:8px;padding:11px;font-size:13px;line-height:1.7;margin-bottom:12px;white-space:pre-wrap;color:var(--muted)}
 .imgs-sec{margin-bottom:12px}
 .imgs-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
 .imgs-grid{display:flex;flex-wrap:wrap;gap:7px}
 .img-thumb{width:76px;height:76px;border-radius:7px;overflow:hidden;border:1px solid var(--border);cursor:pointer}
-.img-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .15s}
-.img-thumb:hover img{transform:scale(1.05)}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
 .act-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:7px}
 .act-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
-.act{padding:10px 8px;border-radius:8px;border:1.5px solid;font-family:'Noto Sans Thai',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;-webkit-appearance:none;transition:opacity .15s}
+.act{padding:10px 8px;border-radius:8px;border:1.5px solid;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:center;-webkit-appearance:none;transition:opacity .15s}
 .act:disabled{opacity:.5;cursor:not-allowed}
-.act:active:not(:disabled){opacity:.75}
-.a-prog{border-color:var(--yellow-bd);color:var(--yellow);background:var(--yellow-bg)}
-.a-done{border-color:var(--green-bd);color:var(--green);background:var(--green-bg)}
-.a-closed{border-color:var(--gray-bd);color:var(--gray);background:var(--gray-bg)}
-.a-esc{border-color:var(--red-bd);color:var(--red);background:var(--red-bg)}
+.a-prog{border-color:rgba(245,158,11,.5);color:#fbbf24;background:rgba(245,158,11,.12)}
+.a-done{border-color:rgba(22,163,74,.5);color:#4ade80;background:rgba(22,163,74,.12)}
+.a-closed{border-color:rgba(107,114,128,.5);color:#9ca3af;background:rgba(107,114,128,.12)}
+.a-esc{border-color:rgba(239,68,68,.5);color:#f87171;background:rgba(239,68,68,.12)}
 .note-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
 .note-row{display:flex;gap:7px;margin-bottom:8px}
-.note-row textarea{flex:1;min-height:58px;font-size:12px;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:9px;color:var(--ink);font-family:'Noto Sans Thai',sans-serif;outline:none;resize:vertical;-webkit-appearance:none}
-.note-row textarea:focus{border-color:var(--blue)}
-.btn-note{padding:7px 13px;background:var(--blue);border:none;border-radius:8px;color:white;font-family:'Noto Sans Thai',sans-serif;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;align-self:flex-end;-webkit-appearance:none}
+.note-row textarea{flex:1;min-height:58px;font-size:12px;background:#1e293b;border:1.5px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-family:inherit;outline:none;resize:vertical}
+.note-row textarea:focus{border-color:var(--primary)}
+.btn-note{padding:7px 13px;background:var(--primary);border:none;border-radius:8px;color:white;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;align-self:flex-end}
 .notes-list{display:flex;flex-direction:column;gap:6px}
-.note-item{background:var(--surface2);border-left:3px solid var(--blue);border-radius:0 7px 7px 0;padding:8px 11px;font-size:12px;line-height:1.6;color:var(--ink2)}
-.note-meta{font-size:10px;color:var(--muted);margin-bottom:2px}
-.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:400;justify-content:center;align-items:center;padding:16px}
+.note-item{background:#1e293b;border-left:3px solid var(--primary);border-radius:0 7px 7px 0;padding:8px 11px;font-size:12px;line-height:1.6;color:var(--muted)}
+.note-meta{font-size:10px;color:#475569;margin-bottom:2px}
+.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;justify-content:center;align-items:center;padding:16px}
 .lb.show{display:flex}
 .lb img{max-width:100%;max-height:90vh;border-radius:8px;object-fit:contain}
 .lb-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.12);border:none;color:white;font-size:18px;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface3);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;z-index:500;opacity:0;transition:all .25s;white-space:nowrap;pointer-events:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;z-index:300;opacity:0;transition:all .25s;white-space:nowrap;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast.ok{border-color:var(--green-bd);color:var(--green)}
-.toast.err{border-color:var(--red-bd);color:var(--red)}
-@media(max-width:480px){.stats{grid-template-columns:1fr 1fr}.act-grid{grid-template-columns:1fr 1fr}.info-grid{grid-template-columns:1fr 1fr}.search-in{width:110px}}
+.toast.ok{border-color:rgba(22,163,74,.5);color:#4ade80}
+.toast.err{border-color:rgba(239,68,68,.5);color:#f87171}
+.hidden{display:none!important}
+@media(max-width:480px){.stats{grid-template-columns:1fr 1fr}.act-grid{grid-template-columns:1fr 1fr}.info-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-
-<div id="pinScreen">
-  <div class="pin-logo">🛠</div>
-  <div class="pin-title">IT Dashboard</div>
-  <div class="pin-sub">ใส่ PIN เพื่อเข้าสู่ระบบ</div>
-  <div class="pin-dots">
-    <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
-    <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
+<div class="wrap">
+  <h2>🛠️ IT Dashboard</h2>
+  <div class="stats">
+    <div class="stat"><div class="stat-n" id="s0" style="color:#60a5fa">—</div><div class="stat-l">🔵 รอดำเนินการ</div></div>
+    <div class="stat"><div class="stat-n" id="s1" style="color:#fbbf24">—</div><div class="stat-l">🟡 กำลังดำเนินการ</div></div>
+    <div class="stat"><div class="stat-n" id="s2" style="color:#4ade80">—</div><div class="stat-l">🟢 แก้ไขแล้ว</div></div>
+    <div class="stat"><div class="stat-n" id="s3" style="color:#f87171">—</div><div class="stat-l">🔴 ด่วนมาก</div></div>
   </div>
-  <div class="pin-pad">
-    <button class="pk" onclick="pp('1')">1</button><button class="pk" onclick="pp('2')">2</button><button class="pk" onclick="pp('3')">3</button>
-    <button class="pk" onclick="pp('4')">4</button><button class="pk" onclick="pp('5')">5</button><button class="pk" onclick="pp('6')">6</button>
-    <button class="pk" onclick="pp('7')">7</button><button class="pk" onclick="pp('8')">8</button><button class="pk" onclick="pp('9')">9</button>
-    <button class="pk sm" onclick="pc()">ลบ</button><button class="pk" onclick="pp('0')">0</button><button class="pk sm" onclick="pr()">✕</button>
+  <div class="filters">
+    <select id="fStatus" onchange="render()">
+      <option value="">ทุกสถานะ</option>
+      <option value="open">🔵 รอดำเนินการ</option>
+      <option value="prog">🟡 กำลังดำเนินการ</option>
+      <option value="done">✅ แก้ไขแล้ว</option>
+      <option value="closed">🔒 ปิด</option>
+      <option value="esc">🔼 Escalated</option>
+    </select>
+    <input type="search" id="fQ" placeholder="🔍 ค้นหา Ticket ID / ชื่อ / หัวข้อ..." oninput="render()">
+    <button onclick="loadTickets()" style="padding:8px 14px;background:var(--primary);border:none;border-radius:9px;color:white;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">↻ รีเฟรช</button>
   </div>
-  <div class="pin-err" id="pinErr"></div>
-  <div class="pin-hint">PIN เริ่มต้น: <strong>1234</strong></div>
-</div>
-
-<div id="app">
-  <header class="topbar">
-    <div class="brand-icon">🛠</div>
-    <div class="brand-name">IT Dashboard</div>
-    <div class="topbar-right">
-      <button class="btn-sm" onclick="loadTickets()">↻ รีเฟรช</button>
-      <button class="btn-sm" onclick="logout()">ออก</button>
-    </div>
-  </header>
-  <main class="main">
-    <div class="page-title">Ticket Management</div>
-    <div class="page-sub">จัดการและติดตาม Ticket — ข้อมูลจาก Google Sheets</div>
-    <div class="stats">
-      <div class="stat"><div class="stat-n" id="s0" style="color:var(--blue)">—</div><div class="stat-l">🔵 รอ<br>ดำเนินการ</div></div>
-      <div class="stat"><div class="stat-n" id="s1" style="color:var(--yellow)">—</div><div class="stat-l">🟡 กำลัง<br>ดำเนินการ</div></div>
-      <div class="stat"><div class="stat-n" id="s2" style="color:var(--green)">—</div><div class="stat-l">🟢 แก้ไข<br>แล้ว</div></div>
-      <div class="stat"><div class="stat-n" id="s3" style="color:var(--red)">—</div><div class="stat-l">🔴 ด่วนมาก</div></div>
-    </div>
-    <div class="filters">
-      <button class="fb on" data-f="all"    onclick="setF(this)">ทั้งหมด</button>
-      <button class="fb"    data-f="open"   onclick="setF(this)">🔵 รอ</button>
-      <button class="fb"    data-f="prog"   onclick="setF(this)">🟡 กำลัง</button>
-      <button class="fb"    data-f="done"   onclick="setF(this)">✅ เสร็จ</button>
-      <button class="fb"    data-f="closed" onclick="setF(this)">🔒 ปิด</button>
-      <input class="search-in" type="search" id="sq" placeholder="🔍 ค้นหา..." oninput="render()">
-    </div>
-    <div class="tkt-list" id="list"><div class="loading"><div class="spin"></div>กำลังโหลด...</div></div>
-  </main>
+  <div class="tkt-list" id="list"><div class="loading"><div class="spin"></div>กำลังโหลด...</div></div>
 </div>
 
 <div class="modal-bg" id="mbg" onclick="bgClose(event)">
@@ -215,108 +154,107 @@ body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--in
   <button class="lb-close">✕</button>
   <img id="lb-img" src="" alt="">
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-const API    = 'https://script.google.com/macros/s/AKfycbyEb-fjZbRtY_1NSFJ9eyWACncaYGRT67IdKhDQ_8YqcGKOBwjef5qT0ev4KF3RP7Ar/exec';
-const IT_PIN = '1234';
-
+const API = 'https://script.google.com/macros/s/AKfycbyEb-fjZbRtY_1NSFJ9eyWACncaYGRT67IdKhDQ_8YqcGKOBwjef5qT0ev4KF3RP7Ar/exec';
 const sMap={open:'🔵 รอดำเนินการ',prog:'🟡 กำลังดำเนินการ',done:'✅ แก้ไขแล้ว',closed:'🔒 ปิด',esc:'🔼 Escalated'};
 const sCls={open:'b-open',prog:'b-prog',done:'b-done',closed:'b-closed',esc:'b-esc'};
 const pMap={low:'🟢 ปกติ',med:'🟡 เร่งด่วน',high:'🔴 ด่วนมาก'};
 const pCls={low:'b-low',med:'b-med',high:'b-high'};
+const esc=v=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-let tickets=[],filt='all',openId=null,pinVal='';
-
-// PIN
-function checkSession(){const t=sessionStorage.getItem('it_s');if(t&&Date.now()-+t<8*3600*1e3)unlock()}
-function pp(d){if(pinVal.length>=4)return;pinVal+=d;dots();if(pinVal.length===4)setTimeout(checkPin,100)}
-function pc(){pinVal=pinVal.slice(0,-1);dots()}
-function pr(){pinVal='';dots();document.getElementById('pinErr').textContent=''}
-function dots(){for(let i=0;i<4;i++){const d=document.getElementById('d'+i);d.className='pin-dot'+(i<pinVal.length?' on':'')}}
-function checkPin(){
-  if(pinVal===IT_PIN)unlock();
-  else{for(let i=0;i<4;i++)document.getElementById('d'+i).className='pin-dot err';document.getElementById('pinErr').textContent='PIN ไม่ถูกต้อง';setTimeout(pr,900)}
-}
-function unlock(){sessionStorage.setItem('it_s',Date.now());document.getElementById('pinScreen').classList.add('hidden');document.getElementById('app').classList.add('show');loadTickets()}
-function logout(){sessionStorage.removeItem('it_s');document.getElementById('pinScreen').classList.remove('hidden');document.getElementById('app').classList.remove('show');pr()}
-
-// DATA
-const g=(t,th,en='')=>String(t[th]||t[en]||'');
+let tickets=[],openId=null;
 
 async function loadTickets(){
   document.getElementById('list').innerHTML='<div class="loading"><div class="spin"></div>กำลังโหลด...</div>';
   try{
     const res=await fetch(API+'?action=list');
-    const raw=await res.json();
-    tickets=Array.isArray(raw)?raw:[];
+    const j=await res.json();
+    if(!j.success)throw new Error(j.message);
+    tickets=Array.isArray(j.data)?j.data:[];
     updStats();render();
-  }catch(e){document.getElementById('list').innerHTML=`<div class="empty"><div class="empty-icon">⚠️</div><p>${e.message}</p></div>`}
+    showToast('โหลดข้อมูลสำเร็จ '+tickets.length+' tickets','ok');
+  }catch(e){
+    document.getElementById('list').innerHTML='<div class="empty">⚠️ '+esc(e.message)+'</div>';
+    showToast('❌ '+e.message,'err');
+  }
 }
 
-function setF(el){filt=el.dataset.f;document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));el.classList.add('on');render()}
-
 function updStats(){
-  document.getElementById('s0').textContent=tickets.filter(t=>(g(t,'สถานะ','status')||'open')==='open').length;
-  document.getElementById('s1').textContent=tickets.filter(t=>(g(t,'สถานะ','status'))==='prog').length;
-  document.getElementById('s2').textContent=tickets.filter(t=>(g(t,'สถานะ','status'))==='done').length;
-  document.getElementById('s3').textContent=tickets.filter(t=>(g(t,'ความเร่งด่วน','priority'))==='high').length;
+  document.getElementById('s0').textContent=tickets.filter(t=>t.status==='open').length;
+  document.getElementById('s1').textContent=tickets.filter(t=>t.status==='prog').length;
+  document.getElementById('s2').textContent=tickets.filter(t=>t.status==='done').length;
+  document.getElementById('s3').textContent=tickets.filter(t=>t.priority==='high').length;
 }
 
 function render(){
-  const q=(document.getElementById('sq').value||'').toLowerCase();
+  const fSt=document.getElementById('fStatus').value;
+  const q=(document.getElementById('fQ').value||'').toLowerCase();
   const list=tickets.filter(t=>{
-    const st=g(t,'สถานะ','status')||'open';
-    if(filt!=='all'&&st!==filt)return false;
-    if(q)return g(t,'หัวข้อปัญหา','title').toLowerCase().includes(q)||g(t,'ชื่อ-นามสกุล','name').toLowerCase().includes(q)||g(t,'Ticket ID','ticket_id').toLowerCase().includes(q);
+    if(fSt&&t.status!==fSt)return false;
+    if(q)return (t.ticket_id||'').toLowerCase().includes(q)||(t.full_name||'').toLowerCase().includes(q)||(t.subject||'').toLowerCase().includes(q)||(t.contact||'').toLowerCase().includes(q);
     return true;
   });
   const el=document.getElementById('list');
-  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>ไม่พบ Ticket</p></div>';return}
+  if(!list.length){el.innerHTML='<div class="empty">📭 ไม่พบ Ticket</div>';return}
   el.innerHTML=list.map((t,i)=>{
-    const st=g(t,'สถานะ','status')||'open';
-    const pri=g(t,'ความเร่งด่วน','priority')||'low';
-    let hasImg=false;try{hasImg=JSON.parse(g(t,'รูปภาพ','images')||'[]').length>0}catch(e){}
+    const st=t.status||'open',pri=t.priority||'low';
+    const hasImg=Array.isArray(t.images)&&t.images.length>0;
+    const created=t.created_at?new Date(t.created_at).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):t.created_at||'—';
     return`<div class="tkt-row" onclick="openModal(${i})">
-      <div class="tkt-id">${g(t,'Ticket ID','ticket_id')||'—'}</div>
-      <div class="tkt-info"><h4>${g(t,'หัวข้อปัญหา','title')||'—'}${hasImg?' 🖼️':''}</h4><p>${g(t,'ชื่อ-นามสกุล','name')||'—'} · ${g(t,'แผนก','dept')||'—'} · ${g(t,'หมวดหมู่','category')||'—'}</p></div>
-      <div class="tkt-meta"><span class="badge ${pCls[pri]||'b-low'}">${pMap[pri]||pri}</span><span class="badge ${sCls[st]||'b-open'}">${sMap[st]||st}</span><span class="tkt-time">${g(t,'วันที่แจ้ง','created_at')||'—'}</span></div>
+      <div class="tkt-id">${esc(t.ticket_id)}</div>
+      <div class="tkt-info">
+        <h4>${esc(t.subject||'—')}${hasImg?' 🖼️':''}</h4>
+        <p>${esc(t.full_name||'—')} · ${esc(t.department||'—')} · ${esc(t.category||'—')}</p>
+      </div>
+      <div class="tkt-meta">
+        <span class="badge ${pCls[pri]||'b-low'}">${pMap[pri]||pri}</span>
+        <span class="badge ${sCls[st]||'b-open'}">${sMap[st]||st}</span>
+        <span class="tkt-time">${esc(created)}</span>
+      </div>
     </div>`;
   }).join('');
 }
 
-// MODAL
-function getList(){
-  const q=(document.getElementById('sq').value||'').toLowerCase();
+function getFiltered(){
+  const fSt=document.getElementById('fStatus').value;
+  const q=(document.getElementById('fQ').value||'').toLowerCase();
   return tickets.filter(t=>{
-    const st=g(t,'สถานะ','status')||'open';
-    if(filt!=='all'&&st!==filt)return false;
-    if(q)return g(t,'หัวข้อปัญหา','title').toLowerCase().includes(q)||g(t,'ชื่อ-นามสกุล','name').toLowerCase().includes(q)||g(t,'Ticket ID','ticket_id').toLowerCase().includes(q);
+    if(fSt&&t.status!==fSt)return false;
+    if(q)return (t.ticket_id||'').toLowerCase().includes(q)||(t.full_name||'').toLowerCase().includes(q)||(t.subject||'').toLowerCase().includes(q)||(t.contact||'').toLowerCase().includes(q);
     return true;
   });
 }
 
 function openModal(i){
-  const t=getList()[i];if(!t)return;
-  openId=g(t,'Ticket ID','ticket_id');
-  document.getElementById('m-id').textContent     =openId;
-  document.getElementById('m-title').textContent  =g(t,'หัวข้อปัญหา','title')||'—';
-  document.getElementById('m-name').textContent   =g(t,'ชื่อ-นามสกุล','name')||'—';
-  document.getElementById('m-dept').textContent   =g(t,'แผนก','dept')||'—';
-  document.getElementById('m-contact').textContent=g(t,'เบอร์ติดต่อ','contact')||'—';
-  document.getElementById('m-loc').textContent    =g(t,'สถานที่','location')||'—';
-  document.getElementById('m-cat').textContent    =g(t,'หมวดหมู่','category')||'—';
-  document.getElementById('m-date').textContent   =g(t,'วันที่แจ้ง','created_at')||'—';
-  document.getElementById('m-desc').textContent   =g(t,'รายละเอียด','description')||'(ไม่มีรายละเอียด)';
-  const st=g(t,'สถานะ','status')||'open';
-  const pri=g(t,'ความเร่งด่วน','priority')||'low';
+  const t=getFiltered()[i];if(!t)return;
+  openId=t.ticket_id;
+  document.getElementById('m-id').textContent    =t.ticket_id||'—';
+  document.getElementById('m-title').textContent =t.subject||'—';
+  document.getElementById('m-name').textContent  =t.full_name||'—';
+  document.getElementById('m-dept').textContent  =t.department||'—';
+  document.getElementById('m-contact').textContent=t.contact||'—';
+  document.getElementById('m-loc').textContent   =t.location||'—';
+  document.getElementById('m-cat').textContent   =t.category||'—';
+  const created=t.created_at?new Date(t.created_at).toLocaleString('th-TH',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}):t.created_at||'—';
+  document.getElementById('m-date').textContent  =created;
+  document.getElementById('m-desc').textContent  =t.description||'(ไม่มีรายละเอียด)';
+  const st=t.status||'open',pri=t.priority||'low';
   document.getElementById('m-pri').outerHTML=`<span id="m-pri" class="badge ${pCls[pri]||'b-low'}">${pMap[pri]||pri}</span>`;
   document.getElementById('m-st').outerHTML =`<span id="m-st"  class="badge ${sCls[st]||'b-open'}">${sMap[st]||st}</span>`;
+  // รูปภาพ
   const imgSec=document.getElementById('imgs-sec');
-  try{const imgs=JSON.parse(g(t,'รูปภาพ','images')||'[]');if(imgs.length){document.getElementById('imgs-grid').innerHTML=imgs.map(s=>`<div class="img-thumb"><img src="${s}" onclick="openLb('${s}')"></div>`).join('');imgSec.style.display='block'}else imgSec.style.display='none'}catch(e){imgSec.style.display='none'}
-  let notes=[];try{notes=JSON.parse(g(t,'โน้ต IT','notes')||'[]')}catch(e){}
-  document.getElementById('notesList').innerHTML=notes.map(n=>`<div class="note-item"><div class="note-meta">IT · ${n.time}</div>${n.text}</div>`).join('');
+  try{
+    const imgs=Array.isArray(t.images)?t.images:[];
+    if(imgs.length){
+      document.getElementById('imgs-grid').innerHTML=imgs.map(s=>`<div class="img-thumb"><img src="${esc(s)}" onclick="openLb('${esc(s)}')"></div>`).join('');
+      imgSec.style.display='block';
+    }else imgSec.style.display='none';
+  }catch(e){imgSec.style.display='none'}
+  // notes
+  const notes=Array.isArray(t.notes)?t.notes:[];
+  document.getElementById('notesList').innerHTML=notes.map(n=>`<div class="note-item"><div class="note-meta">IT · ${esc(n.time||'')}</div>${esc(n.text||'')}</div>`).join('');
   document.getElementById('noteIn').value='';
   document.getElementById('mbg').classList.add('show');
   document.body.style.overflow='hidden';
@@ -325,19 +263,18 @@ function openModal(i){
 function closeModal(){document.getElementById('mbg').classList.remove('show');document.body.style.overflow=''}
 function bgClose(e){if(e.target===document.getElementById('mbg'))closeModal()}
 
-// UPDATE
 async function doUpdate(status,btn){
   const orig=btn.textContent;
   btn.disabled=true;btn.textContent='⏳...';
   try{
     const url=`${API}?action=update&ticket_id=${encodeURIComponent(openId)}&status=${encodeURIComponent(status)}`;
     const res=await fetch(url);
-    const data=JSON.parse(await res.text());
-    if(data.error)throw new Error(data.error);
-    toast('✅ อัปเดตสถานะสำเร็จ','ok');
+    const j=await res.json();
+    if(!j.success)throw new Error(j.message||'เกิดข้อผิดพลาด');
+    showToast('✅ อัปเดตสถานะสำเร็จ','ok');
     await loadTickets();
     closeModal();
-  }catch(e){toast('❌ '+e.message,'err');}
+  }catch(e){showToast('❌ '+e.message,'err');}
   finally{btn.disabled=false;btn.textContent=orig;}
 }
 
@@ -349,27 +286,27 @@ async function doNote(btn){
   try{
     const url=`${API}?action=update&ticket_id=${encodeURIComponent(openId)}&note=${encodeURIComponent(val)}`;
     const res=await fetch(url);
-    const data=JSON.parse(await res.text());
-    if(data.error)throw new Error(data.error);
-    toast('✅ บันทึกโน้ตสำเร็จ','ok');
+    const j=await res.json();
+    if(!j.success)throw new Error(j.message||'เกิดข้อผิดพลาด');
+    showToast('✅ บันทึกโน้ตสำเร็จ','ok');
     document.getElementById('noteIn').value='';
     await loadTickets();
-    const idx=tickets.findIndex(x=>g(x,'Ticket ID','ticket_id')===openId);
+    const idx=tickets.findIndex(x=>x.ticket_id===openId);
     if(idx>=0)openModal(idx);
-  }catch(e){toast('❌ '+e.message,'err');}
+  }catch(e){showToast('❌ '+e.message,'err');}
   finally{btn.disabled=false;btn.textContent=orig;}
 }
 
-function toast(msg,type){
+function showToast(msg,type){
   const el=document.getElementById('toast');
   el.textContent=msg;el.className='toast '+type+' show';
-  setTimeout(()=>{el.className='toast'},3000);
+  setTimeout(()=>el.className='toast',3500);
 }
-
 function openLb(src){document.getElementById('lb-img').src=src;document.getElementById('lb').classList.add('show');document.body.style.overflow='hidden'}
 function closeLb(){document.getElementById('lb').classList.remove('show');document.body.style.overflow=''}
 
-checkSession();
+loadTickets();
+setInterval(loadTickets,15000);
 </script>
 </body>
 </html>
