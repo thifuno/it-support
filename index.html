@@ -168,7 +168,7 @@
           </div></div>
         <div class="fg-item full"><label>หัวข้อปัญหา *</label><input id="f-subj" placeholder="เช่น Excel เปิดไม่ได้"><div class="err-msg" id="e-subj"></div></div>
         <div class="fg-item full"><label>รายละเอียดเพิ่มเติม</label><textarea id="f-desc" placeholder="เกิดขึ้นตั้งแต่เมื่อไหร่ มี error อะไร..."></textarea></div>
-        <div class="fg-item full"><label>แนบรูปภาพ (สูงสุด 5 รูป, รูปละ ≤ 1MB)</label>
+        <div class="fg-item full"><label>แนบรูปภาพ (สูงสุด 5 รูป, รูปละ ≤ 5MB)</label>
           <div class="img-area" id="imgArea">
             <input type="file" id="f-imgs" accept="image/*" multiple onchange="onImgChange(event)">
             <div class="img-area-label">📎 กดหรือลากรูปมาวางที่นี่</div>
@@ -258,7 +258,7 @@
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyEb-fjZbRtY_1NSFJ9eyWACncaYGRT67IdKhDQ_8YqcGKOBwjef5qT0ev4KF3RP7Ar/exec';
-const MAX_SIZE = 1024*1024;
+const MAX_SIZE = 5*1024*1024;
 const sMap={open:'🔵 รอดำเนินการ',prog:'🟡 กำลังดำเนินการ',done:'✅ แก้ไขแล้ว',closed:'🔒 ปิด',esc:'🔼 Escalated'};
 const sCls={open:'b-open',prog:'b-prog',done:'b-done',closed:'b-closed',esc:'b-esc'};
 const pMap={low:'🟢 ปกติ',med:'🟡 เร่งด่วน',high:'🔴 ด่วนมาก'};
@@ -281,7 +281,7 @@ function addImgs(files){
   document.getElementById('e-imgs').textContent='';
   for(const f of files){
     if(imgFiles.length>=5){document.getElementById('e-imgs').textContent='แนบรูปได้สูงสุด 5 รูป';break}
-    if(f.size>MAX_SIZE){document.getElementById('e-imgs').textContent='รูป "'+f.name+'" เกิน 1MB';continue}
+    if(f.size>MAX_SIZE){document.getElementById('e-imgs').textContent='รูป "'+f.name+'" เกิน 5MB';continue}
     if(!f.type.startsWith('image/')){continue}
     imgFiles.push(f);
   }
@@ -321,7 +321,27 @@ function openConfirm(){
 }
 function closeConf(){document.getElementById('confBg').classList.remove('show');document.body.style.overflow=''}
 function bgClose(e){if(e.target===document.getElementById('confBg'))closeConf()}
-async function toB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
+async function toB64(f){
+  return new Promise((res,rej)=>{
+    const img=new Image();
+    const url=URL.createObjectURL(f);
+    img.onload=()=>{
+      const MAX_W=1200,MAX_H=1200;
+      let w=img.width,h=img.height;
+      if(w>MAX_W||h>MAX_H){
+        if(w/h>MAX_W/MAX_H){h=Math.round(h*MAX_W/w);w=MAX_W}
+        else{w=Math.round(w*MAX_H/h);h=MAX_H}
+      }
+      const canvas=document.createElement('canvas');
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      res(canvas.toDataURL('image/jpeg',0.75));
+    };
+    img.onerror=rej;
+    img.src=url;
+  });
+}
 async function doSubmit(){
   const btn=document.getElementById('confBtn');
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>กำลังส่ง...';
