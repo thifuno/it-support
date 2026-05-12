@@ -257,7 +257,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbw36gHsFu3-wkS2CwcDswHjI1cRZ5eZbcafJIyssI0yyt3tHNJPqyLQW47lm2bNZRYB/exec';
+const API = 'https://script.google.com/macros/s/AKfycbw1ZnIZyB9e0GY4mVqmuApnJfKOcrapYPDH1B8vXcrripewb5q-xJr2ChvwrHNthz9M/exec';
 const MAX_SIZE = 5*1024*1024;
 const sMap={open:'🔵 รอดำเนินการ',prog:'🟡 กำลังดำเนินการ',done:'✅ แก้ไขแล้ว',closed:'🔒 ปิด',esc:'🔼 Escalated'};
 const sCls={open:'b-open',prog:'b-prog',done:'b-done',closed:'b-closed',esc:'b-esc'};
@@ -363,12 +363,15 @@ async function doSubmit(){
     const j=await res.json();
     if(!j.success)throw new Error(j.message||'เกิดข้อผิดพลาด');
 
-    // ส่งรูปแยก ทีละรูป
+    // ส่งรูปผ่าน Drive ทีละรูป
     if(imgFiles.length>0){
-      for(const f of imgFiles){
+      for(let idx=0;idx<imgFiles.length;idx++){
         try{
+          const f=imgFiles[idx];
           const b64=await toB64(f);
-          const imgUrl=API+'?action=update&ticket_id='+encodeURIComponent(j.data.ticket_id)+'&add_image='+encodeURIComponent(b64);
+          const imgUrl=API+'?action=upload_image&ticket_id='+encodeURIComponent(j.data.ticket_id)
+            +'&img_data='+encodeURIComponent(b64)
+            +'&img_name='+encodeURIComponent(f.name||('img'+idx+'.jpg'));
           await fetch(imgUrl);
         }catch(e){ console.warn('upload img failed',e); }
       }
